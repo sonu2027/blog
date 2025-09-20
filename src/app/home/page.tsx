@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import Link from 'next/link';
 
 // Sample blog posts data
@@ -250,7 +250,7 @@ export default function HomePage() {
           <div className="text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">📝</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No posts found</h3>
-            <p className="text-gray-600">Try adjusting your search or filter to find what you're looking for.</p>
+            <p className="text-gray-600">Try adjusting your search or filter to find what you are looking for.</p>
           </div>
         )}
       </main>

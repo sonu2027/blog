@@ -3,15 +3,16 @@
 
 import React, { useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // JSX namespace declaration
-declare global {
-    namespace JSX {
-        interface IntrinsicElements {
-            [elemName: string]: any;
-        }
-    }
-}
+// declare global {
+//     namespace JSX {
+//         interface IntrinsicElements {
+//             [elemName: string]: any;
+//         }
+//     }
+// }
 
 // Type definitions
 interface ElementType {
@@ -94,11 +95,11 @@ export default function CreatePostPage(): React.JSX.Element {
     const [droppedElements, setDroppedElements] = useState<DroppedElement[]>([]);
     const [draggedElement, setDraggedElement] = useState<ElementType | null>(null);
     const [editingElement, setEditingElement] = useState<string | null>(null);
-    const [editingLink, setEditingLink] = useState<string | null>(null);
+    // const [editingLink, setEditingLink] = useState<string | null>(null);
     const [linkEditMode, setLinkEditMode] = useState<{ [key: string]: boolean }>({});
     const dropZoneRef = useRef<HTMLDivElement>(null);
     const dragCounter = useRef<number>(0);
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    // const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Handle drag start
     const handleDragStart = (e: React.DragEvent<HTMLDivElement>, element: ElementType): void => {
@@ -369,7 +370,7 @@ export default function CreatePostPage(): React.JSX.Element {
                             {/* Image Display */}
                             {content && content !== 'https://via.placeholder.com/600x300/e5e7eb/9ca3af?text=Drag+Image+Here' && (
                                 <div className="relative group">
-                                    <img
+                                    <Image
                                         className={`${className} border-2 border-gray-200 hover:border-blue-300 rounded transition-all`}
                                         src={content as string}
                                         alt="Uploaded content"
