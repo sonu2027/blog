@@ -103,11 +103,11 @@ export default function BlogPostPage(): React.JSX.Element {
                             </Link>
 
                             <div className="hidden md:flex space-x-6">
-                                <Link href="/" className="text-gray-600 hover:text-gray-900 font-medium">
+                                <Link href="/home" className="text-gray-600 hover:text-gray-900 font-medium">
                                     Home
                                 </Link>
-                                <Link href="/explore" className="text-gray-600 hover:text-gray-900 font-medium">
-                                    Explore
+                                <Link href="/blog" className="text-gray-600 hover:text-gray-900 font-medium">
+                                    Blog
                                 </Link>
                                 <Link href="/write" className="text-gray-600 hover:text-gray-900 font-medium">
                                     Write

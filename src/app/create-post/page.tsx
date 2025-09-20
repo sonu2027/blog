@@ -1,9 +1,8 @@
 // pages/create-post.tsx or app/create-post/page.tsx
 'use client';
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 
 // JSX namespace declaration
 // declare global {
@@ -37,7 +36,7 @@ const ELEMENTS: ElementType[] = [
         name: 'Headline 1',
         icon: '📝',
         defaultContent: 'Your Headline Here',
-        className: 'text-4xl font-bold text-gray-900 mb-4'
+        className: 'text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4'
     },
     {
         id: 'headline2',
@@ -45,7 +44,7 @@ const ELEMENTS: ElementType[] = [
         name: 'Headline 2',
         icon: '📝',
         defaultContent: 'Your Subheading Here',
-        className: 'text-2xl font-semibold text-gray-800 mb-3'
+        className: 'text-xl sm:text-2xl font-semibold text-gray-800 mb-3'
     },
     {
         id: 'paragraph',
@@ -61,7 +60,7 @@ const ELEMENTS: ElementType[] = [
         name: 'Image',
         icon: '🖼️',
         defaultContent: 'https://via.placeholder.com/600x300/e5e7eb/9ca3af?text=Drag+Image+Here',
-        className: 'w-full max-w-2xl mx-auto rounded-lg shadow-sm mb-4'
+        className: 'w-full max-w-full sm:max-w-2xl mx-auto rounded-lg shadow-sm mb-4'
     },
     {
         id: 'link',
@@ -97,9 +96,15 @@ export default function CreatePostPage(): React.JSX.Element {
     const [editingElement, setEditingElement] = useState<string | null>(null);
     // const [editingLink, setEditingLink] = useState<string | null>(null);
     const [linkEditMode, setLinkEditMode] = useState<{ [key: string]: boolean }>({});
+    const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+    const [isMounted, setIsMounted] = useState<boolean>(false);
     const dropZoneRef = useRef<HTMLDivElement>(null);
     const dragCounter = useRef<number>(0);
     // const fileInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     // Handle drag start
     const handleDragStart = (e: React.DragEvent<HTMLDivElement>, element: ElementType): void => {
@@ -259,8 +264,9 @@ export default function CreatePostPage(): React.JSX.Element {
         const renderDeleteButton = (): React.JSX.Element => (
             <button
                 onClick={handleDeleteClick}
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs"
+                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity text-xs hover:bg-red-600"
                 type="button"
+                title="Delete element"
             >
                 ×
             </button>
@@ -347,7 +353,7 @@ export default function CreatePostPage(): React.JSX.Element {
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Image URL or Upload
                                 </label>
-                                <div className="flex space-x-2">
+                                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                                     <input
                                         type="url"
                                         value={content as string}
@@ -359,7 +365,7 @@ export default function CreatePostPage(): React.JSX.Element {
                                     />
                                     <button
                                         onClick={() => handleImageClick(element.id)}
-                                        className="px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 whitespace-nowrap"
                                         type="button"
                                     >
                                         📁 Upload
@@ -370,7 +376,7 @@ export default function CreatePostPage(): React.JSX.Element {
                             {/* Image Display */}
                             {content && content !== 'https://via.placeholder.com/600x300/e5e7eb/9ca3af?text=Drag+Image+Here' && (
                                 <div className="relative group">
-                                    <Image
+                                    <img
                                         className={`${className} border-2 border-gray-200 hover:border-blue-300 rounded transition-all`}
                                         src={content as string}
                                         alt="Uploaded content"
@@ -407,15 +413,15 @@ export default function CreatePostPage(): React.JSX.Element {
                             {/* Placeholder when no image */}
                             {(!content || content === 'https://via.placeholder.com/600x300/e5e7eb/9ca3af?text=Drag+Image+Here') && (
                                 <div
-                                    className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors cursor-pointer"
+                                    className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-8 text-center hover:border-blue-400 transition-colors cursor-pointer"
                                     onClick={() => handleImageClick(element.id)}
                                 >
                                     <div className="text-gray-400">
-                                        <svg className="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
-                                        <p className="text-lg font-medium">No image selected</p>
-                                        <p className="text-sm">Click to upload or enter URL above</p>
+                                        <p className="text-base sm:text-lg font-medium">No image selected</p>
+                                        <p className="text-xs sm:text-sm">Click to upload or enter URL above</p>
                                     </div>
                                 </div>
                             )}
@@ -469,14 +475,14 @@ export default function CreatePostPage(): React.JSX.Element {
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="flex justify-between items-center pt-2">
+                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 pt-2">
                                 {/* Link Preview (only shown when not in edit mode) */}
                                 {!isEditMode && content && href && (
                                     <a
                                         href={href}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-blue-600 hover:text-blue-800 underline text-sm"
+                                        className="text-blue-600 hover:text-blue-800 underline text-sm truncate"
                                     >
                                         Preview: {content as string}
                                     </a>
@@ -491,9 +497,9 @@ export default function CreatePostPage(): React.JSX.Element {
                                 {/* Save/Edit Button */}
                                 <button
                                     onClick={() => handleLinkSaveEdit(element.id)}
-                                    className={`px-4 py-2 rounded-md font-medium transition-colors ${isEditMode
-                                            ? 'bg-green-600 text-white hover:bg-green-700'
-                                            : 'bg-blue-600 text-white hover:bg-blue-700'
+                                    className={`px-4 py-2 rounded-md font-medium transition-colors whitespace-nowrap ${isEditMode
+                                        ? 'bg-green-600 text-white hover:bg-green-700'
+                                        : 'bg-blue-600 text-white hover:bg-blue-700'
                                         }`}
                                     type="button"
                                 >
@@ -521,7 +527,7 @@ export default function CreatePostPage(): React.JSX.Element {
                                     autoFocus
                                 />
                             ) : (
-                                `"${content as string}"`
+                                `${content as string}`
                             )}
                         </blockquote>
                         {renderDeleteButton()}
@@ -553,17 +559,29 @@ export default function CreatePostPage(): React.JSX.Element {
             <header className="bg-white border-b border-gray-200">
                 <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
-                        <div className="flex items-center space-x-8">
+                        <div className="flex items-center space-x-4 sm:space-x-8">
                             <Link href="/" className="flex items-center space-x-2">
                                 <div className="bg-black text-white p-2 rounded-lg">
                                     <span className="font-bold text-xl">B</span>
                                 </div>
-                                <span className="text-xl font-bold text-gray-900">Bloggr</span>
+                                <span className="hidden sm:block text-xl font-bold text-gray-900">Bloggr</span>
                             </Link>
-                            <h1 className="text-xl font-semibold text-gray-700">Create Post</h1>
+                            <h1 className="text-lg sm:text-xl font-semibold text-gray-700">Create Post</h1>
                         </div>
 
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-2 sm:space-x-4">
+                            {/* Elements button for mobile */}
+                            {isMounted && (
+                                <button
+                                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                                    className="lg:hidden bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
+                                    type="button"
+                                >
+                                    <span className="text-lg">📋</span>
+                                    <span className="text-sm">Elements</span>
+                                </button>
+                            )}
+
                             <button
                                 className="text-gray-400 hover:text-gray-600"
                                 type="button"
@@ -586,17 +604,55 @@ export default function CreatePostPage(): React.JSX.Element {
                 </nav>
             </header>
 
-            <div className="flex">
+            <div className="flex relative">
+                {/* Mobile Sidebar Overlay */}
+                {isMounted && sidebarOpen && (
+                    <div
+                        className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+                        onClick={() => setSidebarOpen(false)}
+                    ></div>
+                )}
+
                 {/* Sidebar - Elements */}
-                <div className="w-64 bg-white border-r border-gray-200 h-screen sticky top-16">
-                    <div className="p-6">
-                        <h2 className="text-lg font-semibold text-gray-900 mb-4">Elements</h2>
+                <div className={`
+                    ${isMounted && sidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
+                    lg:translate-x-0 
+                    fixed
+                    inset-y-0 left-0 
+                    z-50 lg:z-auto
+                    w-64 
+                    bg-white 
+                    border-r border-gray-200 
+                    h-screen 
+                    lg:sticky lg:top-16
+                    transition-transform duration-300 ease-in-out
+                    overflow-y-auto
+                `}>
+                    <div className="p-4 sm:p-6">
+                        <div className="flex items-center justify-between lg:justify-start mb-4">
+                            <h2 className="text-lg font-semibold text-gray-900">Elements</h2>
+                            {isMounted && (
+                                <button
+                                    onClick={() => setSidebarOpen(false)}
+                                    className="lg:hidden text-gray-400 hover:text-gray-600"
+                                    type="button"
+                                    aria-label="Close menu"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            )}
+                        </div>
                         <div className="space-y-2">
                             {ELEMENTS.map((element: ElementType) => (
                                 <div
                                     key={element.id}
                                     draggable
-                                    onDragStart={(e: React.DragEvent<HTMLDivElement>) => handleDragStart(e, element)}
+                                    onDragStart={(e: React.DragEvent<HTMLDivElement>) => {
+                                        handleDragStart(e, element);
+                                        setSidebarOpen(false);
+                                    }}
                                     className="flex items-center space-x-3 p-3 rounded-lg border border-gray-200 cursor-move hover:bg-gray-50 hover:border-gray-300 transition-colors"
                                 >
                                     <span className="text-lg">{element.icon}</span>
@@ -608,16 +664,16 @@ export default function CreatePostPage(): React.JSX.Element {
                 </div>
 
                 {/* Main Content Area */}
-                <div className="flex-1 p-8">
+                <div className="flex-1 p-4 sm:p-6 lg:p-8">
                     <div className="max-w-4xl mx-auto">
                         {/* Post Title */}
-                        <div className="mb-8">
+                        <div className="mb-6 sm:mb-8">
                             <input
                                 type="text"
                                 placeholder="Post Title"
                                 value={postTitle}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPostTitle(e.target.value)}
-                                className="w-full text-3xl font-bold text-gray-900 placeholder-gray-400 border-none outline-none bg-transparent"
+                                className="w-full text-2xl sm:text-3xl font-bold text-gray-900 placeholder-gray-400 border-none outline-none bg-transparent"
                             />
                         </div>
 
@@ -628,14 +684,24 @@ export default function CreatePostPage(): React.JSX.Element {
                             onDragEnter={handleDragEnter}
                             onDragLeave={handleDragLeave}
                             onDrop={handleDrop}
-                            className={`min-h-96 border-2 border-dashed border-gray-300 rounded-lg p-8 transition-colors ${droppedElements.length === 0 ? 'flex items-center justify-center' : ''
+                            className={`min-h-64 sm:min-h-96 border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-8 transition-colors ${droppedElements.length === 0 ? 'flex items-center justify-center' : ''
                                 }`}
                         >
                             {droppedElements.length === 0 ? (
                                 <div className="text-center">
-                                    <div className="text-gray-400 text-6xl mb-4">📝</div>
-                                    <p className="text-gray-500 text-lg mb-2">Drag and drop elements here</p>
+                                    <div className="text-gray-400 text-4xl sm:text-6xl mb-4">📝</div>
+                                    <p className="text-gray-500 text-base sm:text-lg mb-2">Drag and drop elements here</p>
                                     <p className="text-gray-400 text-sm">Start building your blog post by dragging elements from the sidebar</p>
+                                    {isMounted && (
+                                        <button
+                                            onClick={() => setSidebarOpen(true)}
+                                            className="mt-4 lg:hidden bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 mx-auto"
+                                            type="button"
+                                        >
+                                            <span className="text-lg">📋</span>
+                                            <span>Show Elements</span>
+                                        </button>
+                                    )}
                                 </div>
                             ) : (
                                 <div className="space-y-4">
@@ -645,10 +711,10 @@ export default function CreatePostPage(): React.JSX.Element {
                         </div>
 
                         {/* Publish Button */}
-                        <div className="mt-8 flex justify-end">
+                        <div className="mt-6 sm:mt-8 flex justify-end">
                             <button
                                 onClick={handlePublish}
-                                className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                                className="w-full sm:w-auto bg-blue-600 text-white px-6 py-3 sm:py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
                                 type="button"
                             >
                                 Publish
